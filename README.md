@@ -1,13 +1,51 @@
-[//]: # (Image References)
-
-[image1]: ./images/sample_dog_output.png "Sample Output"
-[image2]: ./images/vgg16_model.png "VGG-16 Model Keras Layers"
-[image3]: ./images/vgg16_model_draw.png "VGG16 Model Figure"
-
-
 ## Project Overview
+The main objective of the project is to use Deep Learning concepts to build an image classifier that classifies an input image. This input image can be either of a Human or a dog, the classifier will be able to correctly classify that it is either a Human or a dog and also It will classify dog’s breed if the image is of a dog. For the fun part, the classifier will also classify the image of a human to its closest lookalike dog-breed. The projects use high-level deep learning concepts such as CNN and transfer learning.
 
-## Project Instructions
+## Data Understanding and Preprocessing
+The Dog data contains 133 total dog categories and there are 8351 total dog images. You can download the dog data set from the link here.
+
+![Some of the dog images in Dataset](./docs/dogs_.png "Some of the dog images in Dataset") 
+
+
+The Human Image dataset contains 13233 Human images.
+![](./docs/humans_.png "Some of the Human images in Dataset")
+
+
+We can see that human faces are of the same size but the dog images are of different shapes. It will be beneficial to preprocess the dog images before any type of training and reshape them to the same sizes. Thus in the project, all the dog images are resized to the shape (224,224) using the `Keras` package.
+## Human and Dog Classifier
+There were two models that were used for Human and dog classifications, They were :
+* Using the OpenCV’s implementation of Haar feature-based cascade classifiers to detect human faces in images `OpenCV` provides many pre-trained face detectors, stored as XML files on GitHub before using any of the face detectors, it is standard procedure to convert the images to grayscale. The model was doing well in classifying the human faces as human but also miss classifying dog images as human images thus different strategy was required.
+* Now the pre-trained `ResNet-50 model` is used to detect dogs in images. ResNet-50 model was downloaded, along with weights that have been trained on ImageNet, a very large, very popular dataset used for image classification and other vision tasks. ImageNet contains over 10 million URLs, each linking to an image containing an object from one of 1000 categories. Given an image, this pre-trained `ResNet-50` model returns a prediction (derived from the available categories in ImageNet) for the object that is contained in the image.
+## CNN to Classify Dog Breeds (from Scratch)
+According to Wikipedia, A convolutional neural network consists of an input and an output layer, as well as multiple hidden layers. The hidden layers of a `CNN` typically consist of a series of convolutional layers that convolve with multiplication or other dot product. The activation function is commonly a `RELU layer` and is subsequently followed by additional convolutions such as pooling layers, fully connected layers, and normalization layers referred to as hidden layers because their inputs and outputs are masked by the activation function and final convolution.
+![](./docs/Typical_cnn.png "A typical CNN")
+_A typical CNN Architecture._
+
+
+I used `8 layered` CNN architecture including the Fully Connected Layer. `Rmsprop` as the optimizer and `categorical cross-entropy` as the loss function.
+
+![](./images/sample_cnn.png "MY CNN Architecture")
+_Architecture I used for my model_
+
+After training for 10 epochs my model achieved Training accuracy of `~3.6%` and validation accuracy of `~3.2%`.
+Classification Using Transfer learning
+## Transfer Learning
+Transfer Learning is a Machine Learning Paradigm that mainly focuses on storing knowledge gained when solving one problem and then applying it to different problems that are related. You can know more about Transfer Learning here.
+In this project, transfer learning is used and it has been tried with two different models.
+### VGG-16 Model
+The model uses the pre-trained `VGG-16` model as a fixed feature extractor, where the last convolutional output of VGG-16 is fed as input to our model. We only add a global average pooling layer and a fully connected layer, where the latter contains one node for each dog category and is equipped with a softmax.
+This model had a validation accuracy of `~44%` and training accuracy of `~55%` the model was clearly underfitting.
+### Resnet-50 Model
+We have learned about the `Resnet-50` model above to know more you can read here.
+Using the flattened output of `Resnet-50` model and the fully connected layer of 133 node having activation function `“softmax”` model achieved validation accuracy of `~82%` and training accuracy of `~99%` when trained `20` epochs.
+
+## Result 
+Here is one of the result of the Model.
+
+
+![Result](./docs/val_img.png "Result")
+
+***
 
 ### Instructions
 
